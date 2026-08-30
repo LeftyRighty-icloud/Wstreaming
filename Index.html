@@ -1,0 +1,1283 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>Wstreaming</title>
+
+<style>
+:root{
+  --bg:#07080d;
+  --p:#11131c;
+  --line:#282c3b;
+  --red:#ff3b4e;
+  --vio:#805cff;
+  --cyan:#43d7ff;
+  --gold:#ffc94a;
+}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  background:var(--bg);
+  color:#fff;
+  font-family:Inter,system-ui,Arial;
+}
+
+button,input,select{font:inherit}
+.hidden{display:none!important}
+
+.top{
+  position:sticky;
+  top:0;
+  z-index:10;
+  height:66px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:0 18px;
+  background:#090a10f2;
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(14px);
+}
+
+.brand{
+  font-size:22px;
+  font-weight:950;
+  white-space:nowrap;
+}
+
+.brand b{color:var(--red)}
+
+.search{
+  flex:1;
+  max-width:620px;
+  margin:auto;
+  background:#151823;
+  border:1px solid var(--line);
+  border-radius:14px;
+  padding:10px 13px;
+}
+
+.search input{
+  width:100%;
+  border:0;
+  outline:0;
+  background:transparent;
+  color:#fff;
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+}
+
+.btn{
+  border:0;
+  border-radius:12px;
+  padding:10px 14px;
+  font-weight:900;
+  color:white;
+  cursor:pointer;
+}
+
+.dark{
+  background:#171a24;
+  border:1px solid var(--line);
+}
+
+.live{background:var(--red)}
+
+.prem{
+  background:linear-gradient(135deg,#ffdc65,#efa321);
+  color:#271800;
+}
+
+.hero{
+  position:relative;
+  min-height:360px;
+  padding:48px 5vw;
+  display:flex;
+  align-items:end;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 72% 30%,#832dff88,transparent 25%),
+    radial-gradient(circle at 80% 70%,#ff314d88,transparent 26%),
+    linear-gradient(135deg,#10152a,#241037 55%,#220d16);
+}
+
+.hero:after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(#ffffff08 1px,transparent 1px),
+    linear-gradient(90deg,#ffffff08 1px,transparent 1px);
+  background-size:42px 42px;
+  opacity:.3;
+}
+
+.copy{
+  position:relative;
+  z-index:2;
+  max-width:680px;
+}
+
+.kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  border:1px solid #ff506055;
+  background:#ff506014;
+  color:#ff9da7;
+  padding:7px 11px;
+  border-radius:99px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.dot{
+  width:8px;
+  height:8px;
+  background:var(--red);
+  border-radius:50%;
+  box-shadow:0 0 12px var(--red);
+}
+
+h1{
+  font-size:clamp(48px,8vw,88px);
+  line-height:.88;
+  letter-spacing:-.07em;
+  margin:15px 0;
+}
+
+h1 em{
+  font-style:normal;
+  background:linear-gradient(90deg,#ff4a60,#9d5cff,#4bdcff);
+  -webkit-background-clip:text;
+  color:transparent;
+}
+
+.copy p{
+  color:#bcc3d3;
+  font-size:17px;
+  line-height:1.55;
+}
+
+.page{
+  padding:24px 4vw 60px;
+}
+
+.stats{
+  display:grid;
+  grid-template-columns:repeat(4,1fr);
+  gap:12px;
+  margin-top:-42px;
+  position:relative;
+  z-index:3;
+}
+
+.stat{
+  background:#11131cec;
+  border:1px solid var(--line);
+  border-radius:18px;
+  padding:17px;
+}
+
+.stat b{
+  font-size:22px;
+  display:block;
+}
+
+.stat span{
+  font-size:12px;
+  color:#9ba4b6;
+}
+
+.section{
+  margin-top:34px;
+}
+
+.head{
+  display:flex;
+  justify-content:space-between;
+  align-items:end;
+  margin-bottom:12px;
+}
+
+.head h2{
+  margin:0;
+  font-size:22px;
+}
+
+.head span{
+  color:#99a2b5;
+  font-size:12px;
+}
+
+.row{
+  display:grid;
+  grid-auto-flow:column;
+  grid-auto-columns:minmax(250px,300px);
+  gap:14px;
+  overflow-x:auto;
+  padding-bottom:8px;
+}
+
+.card{
+  background:#10131b;
+  border:1px solid #242838;
+  border-radius:18px;
+  overflow:hidden;
+  position:relative;
+  cursor:pointer;
+}
+
+.thumb{
+  height:165px;
+  position:relative;
+  background:linear-gradient(135deg,var(--a),var(--b));
+  display:grid;
+  place-items:center;
+  font-size:56px;
+}
+
+.badge{
+  position:absolute;
+  z-index:2;
+  left:9px;
+  top:9px;
+  background:var(--red);
+  padding:5px 7px;
+  border-radius:7px;
+  font-size:10px;
+  font-weight:950;
+}
+
+.viewers{
+  position:absolute;
+  z-index:2;
+  right:9px;
+  top:9px;
+  background:#000a;
+  padding:5px 7px;
+  border-radius:7px;
+  font-size:10px;
+}
+
+.info{
+  display:flex;
+  gap:10px;
+  padding:12px;
+}
+
+.ava{
+  width:38px;
+  height:38px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(135deg,#5365ff,#a04eff);
+  font-weight:900;
+}
+
+.txt b{display:block}
+
+.txt span{
+  font-size:12px;
+  color:#929bad;
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:30;
+  background:#020308dc;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  backdrop-filter:blur(12px);
+}
+
+.box{
+  width:min(620px,96vw);
+  max-height:92vh;
+  overflow:auto;
+  background:#11141e;
+  border:1px solid #2a3040;
+  border-radius:24px;
+  padding:22px;
+}
+
+.boxtop{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+}
+
+.x{
+  width:36px;
+  height:36px;
+  border-radius:10px;
+  background:#181c28;
+  border:1px solid #303648;
+  color:#fff;
+  font-size:20px;
+  cursor:pointer;
+}
+
+.field{
+  margin-top:14px;
+}
+
+.field label{
+  display:block;
+  font-size:12px;
+  font-weight:850;
+  color:#aeb6c7;
+  margin-bottom:6px;
+}
+
+.field input,
+.field select{
+  width:100%;
+  padding:12px;
+  background:#0c0f17;
+  color:#fff;
+  border:1px solid #2b3040;
+  border-radius:12px;
+}
+
+.preview{
+  margin-top:15px;
+  aspect-ratio:16/9;
+  background:#060811;
+  border:1px solid #292e3d;
+  border-radius:16px;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  color:#8f98aa;
+  text-align:center;
+}
+
+.preview video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.status{
+  margin-top:10px;
+  color:#b0b7c6;
+  font-size:13px;
+}
+
+.ok{
+  padding:11px;
+  background:#42e58c17;
+  border:1px solid #42e58c55;
+  border-radius:12px;
+  color:#7ff2ae;
+  font-weight:850;
+}
+
+.stage{
+  aspect-ratio:16/9;
+  border-radius:17px;
+  background:linear-gradient(135deg,#17224c,#3b183f);
+  display:grid;
+  place-items:center;
+  position:relative;
+  overflow:hidden;
+}
+
+.stage:after{
+  content:"LIVE";
+  position:absolute;
+  left:10px;
+  top:10px;
+  background:var(--red);
+  padding:5px 8px;
+  border-radius:7px;
+  font-size:10px;
+  font-weight:950;
+}
+
+.empty{
+  min-width:280px;
+  padding:26px;
+  border:1px dashed #303647;
+  border-radius:18px;
+  color:#8f98aa;
+  background:#0b0e15;
+}
+
+@media(max-width:800px){
+  .search{display:none}
+  .stats{grid-template-columns:repeat(2,1fr)}
+  .row{grid-auto-columns:82vw}
+  .actions .prem{display:none}
+  .top{padding:0 10px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="top">
+  <div class="brand">W<b>streaming</b></div>
+
+  <div class="search">
+    <input id="search" placeholder="Search streams, creators, categories...">
+  </div>
+
+  <div class="actions">
+    <button class="btn live" id="goLive">● Go Live</button>
+    <button class="btn prem" id="premium">Premium</button>
+    <button class="btn dark" id="owner">Owner</button>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="copy">
+    <div class="kicker">
+      <span class="dot"></span>
+      LIVE RIGHT NOW
+    </div>
+
+    <h1>
+      WATCH.<br>
+      <em>STREAM.</em><br>
+      DISCOVER.
+    </h1>
+
+    <p>
+      Free live streaming for gaming, music, sports,
+      art, IRL, coding and more.
+    </p>
+
+    <button class="btn live" id="heroLive">
+      Start Streaming
+    </button>
+  </div>
+</section>
+
+<main class="page">
+
+  <div class="stats">
+
+    <div class="stat">
+      <b>Real streams only</b>
+      <span>No fake AI live streams</span>
+    </div>
+
+    <div class="stat">
+      <b>12 Categories</b>
+      <span>Choose before going live</span>
+    </div>
+
+    <div class="stat">
+      <b id="liveCount">0 Live</b>
+      <span>Streams on this device</span>
+    </div>
+
+    <div class="stat">
+      <b id="pstate">Premium: Locked</b>
+      <span>Coming soon</span>
+    </div>
+
+  </div>
+
+  <div id="sections"></div>
+
+</main>
+
+
+<!-- GO LIVE -->
+
+<div class="modal hidden" id="liveModal">
+
+  <div class="box">
+
+    <div class="boxtop">
+
+      <div>
+        <div class="kicker">
+          <span class="dot"></span>
+          CREATOR STUDIO
+        </div>
+
+        <h2>Start a Stream</h2>
+      </div>
+
+      <button class="x" data-close="liveModal">×</button>
+
+    </div>
+
+    <div class="field">
+      <label>STREAM TITLE</label>
+      <input id="title" placeholder="What are you streaming?">
+    </div>
+
+    <div class="field">
+      <label>CATEGORY</label>
+
+      <select id="cat">
+        <option value="">Choose a category...</option>
+      </select>
+    </div>
+
+    <div class="preview" id="preview">
+      Camera preview appears here
+    </div>
+
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
+
+      <button class="btn dark" id="camera">
+        Enable Camera + Mic
+      </button>
+
+      <button class="btn live" id="start">
+        ● Start Live
+      </button>
+
+    </div>
+
+    <div class="status" id="status">
+      Not live.
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- PREMIUM -->
+
+<div class="modal hidden" id="premiumModal">
+
+  <div class="box">
+
+    <div class="boxtop">
+
+      <div>
+        <div class="kicker">PREMIUM</div>
+        <h2>Wstreaming Premium</h2>
+      </div>
+
+      <button class="x" data-close="premiumModal">×</button>
+
+    </div>
+
+    <p>
+      Premium features are coming soon.
+    </p>
+
+    <div class="ok">
+      ✓ Premium badge
+    </div>
+
+    <br>
+
+    <button class="btn prem" style="width:100%">
+      COMING SOON
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- OWNER -->
+
+<div class="modal hidden" id="ownerModal">
+
+  <div class="box">
+
+    <div class="boxtop">
+
+      <div>
+        <div class="kicker">OWNER ACCESS</div>
+        <h2>Owner Login</h2>
+      </div>
+
+      <button class="x" data-close="ownerModal">×</button>
+
+    </div>
+
+    <div class="field">
+      <label>OWNER CODE</label>
+      <input
+        id="ocode"
+        type="password"
+        placeholder="Enter owner code">
+    </div>
+
+    <div class="status" id="omsg"></div>
+
+    <button
+      class="btn live"
+      id="unlock"
+      style="width:100%;margin-top:12px">
+
+      Unlock Owner Mode
+
+    </button>
+
+  </div>
+
+</div>
+
+
+<!-- PLAYER -->
+
+<div class="modal hidden" id="player">
+
+  <div class="box" style="width:min(900px,96vw)">
+
+    <div class="boxtop">
+
+      <div>
+
+        <div class="kicker">
+          <span class="dot"></span>
+          LIVE
+        </div>
+
+        <h2 id="ptitle">
+          Stream
+        </h2>
+
+        <div
+          id="pcreator"
+          style="color:#9ba4b6">
+        </div>
+
+      </div>
+
+      <button class="x" data-close="player">
+        ×
+      </button>
+
+    </div>
+
+    <div class="stage">
+
+      <video
+        id="watchVideo"
+        autoplay
+        muted
+        playsinline
+        style="
+        width:100%;
+        height:100%;
+        object-fit:cover;
+        border-radius:17px">
+      </video>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const categories = [
+  ["Gaming","🎮"],
+  ["Just Chatting","💬"],
+  ["Music","🎵"],
+  ["Sports","🏀"],
+  ["Art","🎨"],
+  ["IRL","🌎"],
+  ["Coding","⌨️"],
+  ["Science & Tech","🔬"],
+  ["Food","🍜"],
+  ["Education","📚"],
+  ["Creative","✨"],
+  ["Speedruns","⚡"]
+];
+
+
+let media = null;
+let liveStreams = [];
+
+
+const $ = id => document.getElementById(id);
+
+
+const goLiveBtn = $("goLive");
+const heroLiveBtn = $("heroLive");
+
+const premiumBtn = $("premium");
+const ownerBtn = $("owner");
+
+const cameraBtn = $("camera");
+const startBtn = $("start");
+
+const preview = $("preview");
+const statusEl = $("status");
+
+const titleEl = $("title");
+const catEl = $("cat");
+
+const searchEl = $("search");
+
+const player = $("player");
+
+const ptitle = $("ptitle");
+const pcreator = $("pcreator");
+
+const watchVideo = $("watchVideo");
+
+
+function openModal(id){
+
+  $(id).classList.remove("hidden");
+
+}
+
+
+function closeModal(id){
+
+  $(id).classList.add("hidden");
+
+}
+
+
+document
+.querySelectorAll("[data-close]")
+.forEach(button => {
+
+  button.addEventListener("click", () => {
+
+    closeModal(button.dataset.close);
+
+  });
+
+});
+
+
+goLiveBtn.addEventListener("click", () => {
+
+  openModal("liveModal");
+
+});
+
+
+heroLiveBtn.addEventListener("click", () => {
+
+  openModal("liveModal");
+
+});
+
+
+premiumBtn.addEventListener("click", () => {
+
+  openModal("premiumModal");
+
+});
+
+
+ownerBtn.addEventListener("click", () => {
+
+  openModal("ownerModal");
+
+});
+
+
+categories.forEach(([name]) => {
+
+  const option = document.createElement("option");
+
+  option.value = name;
+  option.textContent = name;
+
+  catEl.appendChild(option);
+
+});
+
+
+function colorFromText(text){
+
+  let h = 0;
+
+  for(const char of text){
+
+    h = (
+      h * 31 +
+      char.charCodeAt(0)
+    ) % 360;
+
+  }
+
+  return [
+
+    `hsl(${h} 75% 43%)`,
+
+    `hsl(${(h + 70) % 360} 70% 22%)`
+
+  ];
+
+}
+
+
+function buildStreams(){
+
+  const root = $("sections");
+
+  root.innerHTML = "";
+
+
+  categories.forEach(([category,icon]) => {
+
+    const streams = liveStreams.filter(
+      stream =>
+      stream.category === category
+    );
+
+
+    const section =
+      document.createElement("section");
+
+    section.className = "section";
+
+
+    section.innerHTML = `
+
+      <div class="head">
+
+        <div>
+
+          <h2>
+            ${icon} ${category}
+          </h2>
+
+          <span>
+            ${
+              streams.length
+              ? "Live now"
+              : "No one live yet"
+            }
+          </span>
+
+        </div>
+
+        <span>
+          ${streams.length}
+          stream${streams.length === 1 ? "" : "s"}
+        </span>
+
+      </div>
+
+      <div class="row"></div>
+
+    `;
+
+
+    const row =
+      section.querySelector(".row");
+
+
+    if(streams.length === 0){
+
+      const empty =
+        document.createElement("div");
+
+      empty.className = "empty";
+
+      empty.innerHTML = `
+
+        <b style="color:#d8deea">
+          No streams yet.
+        </b>
+
+        <br>
+
+        <span style="font-size:13px">
+          When someone starts streaming,
+          they appear here.
+        </span>
+
+      `;
+
+      row.appendChild(empty);
+
+    }
+
+
+    streams.forEach(stream => {
+
+      const colors =
+        colorFromText(
+          stream.title +
+          stream.category
+        );
+
+
+      const card =
+        document.createElement("article");
+
+      card.className = "card";
+
+
+      card.dataset.search = (
+
+        stream.title +
+        " " +
+        stream.category +
+        " " +
+        stream.creator
+
+      ).toLowerCase();
+
+
+      card.innerHTML = `
+
+        <div
+        class="thumb"
+        style="
+        --a:${colors[0]};
+        --b:${colors[1]}">
+
+          <div class="badge">
+            LIVE
+          </div>
+
+          <div class="viewers">
+            LIVE CAMERA
+          </div>
+
+          <video
+            autoplay
+            muted
+            playsinline
+            style="
+            width:100%;
+            height:100%;
+            object-fit:cover">
+          </video>
+
+        </div>
+
+        <div class="info">
+
+          <div class="ava">
+            W
+          </div>
+
+          <div class="txt">
+
+            <b>
+              ${stream.title}
+            </b>
+
+            <span>
+              ${stream.creator}
+              •
+              ${stream.category}
+            </span>
+
+          </div>
+
+        </div>
+
+      `;
+
+
+      const video =
+        card.querySelector("video");
+
+      video.srcObject =
+        stream.stream;
+
+
+      card.addEventListener(
+        "click",
+        () => watchStream(stream)
+      );
+
+
+      row.appendChild(card);
+
+    });
+
+
+    root.appendChild(section);
+
+  });
+
+
+  $("liveCount").textContent =
+    liveStreams.length + " Live";
+
+}
+
+
+async function enableCamera(){
+
+  if(
+    !navigator.mediaDevices ||
+    !navigator.mediaDevices.getUserMedia
+  ){
+
+    statusEl.innerHTML = `
+
+      Camera cannot open here.
+
+      <br><br>
+
+      Upload this page to
+      GitHub Pages or Netlify
+      and open the HTTPS website.
+
+    `;
+
+    return false;
+
+  }
+
+
+  try{
+
+    if(media){
+
+      media
+      .getTracks()
+      .forEach(track => track.stop());
+
+    }
+
+
+    media =
+      await navigator
+      .mediaDevices
+      .getUserMedia({
+
+        video:{
+          facingMode:"user"
+        },
+
+        audio:true
+
+      });
+
+
+    const video =
+      document.createElement("video");
+
+
+    video.autoplay = true;
+    video.muted = true;
+    video.playsInline = true;
+
+    video.srcObject = media;
+
+
+    preview.innerHTML = "";
+
+    preview.appendChild(video);
+
+
+    try{
+
+      await video.play();
+
+    }catch(error){}
+
+
+    statusEl.textContent =
+      "Camera and microphone ready. Press Start Live.";
+
+
+    return true;
+
+
+  }catch(error){
+
+    console.error(error);
+
+
+    if(
+      error.name ===
+      "NotAllowedError"
+    ){
+
+      statusEl.textContent =
+        "Camera permission was denied. Allow camera and microphone access in your browser.";
+
+    }else{
+
+      statusEl.textContent =
+        "Camera error: " +
+        error.message;
+
+    }
+
+
+    return false;
+
+  }
+
+}
+
+
+cameraBtn.addEventListener(
+  "click",
+  enableCamera
+);
+
+
+startBtn.addEventListener(
+"click",
+async () => {
+
+
+  if(
+    titleEl.value
+    .trim() === ""
+  ){
+
+    statusEl.textContent =
+      "Enter a stream title first.";
+
+    return;
+
+  }
+
+
+  if(
+    catEl.value === ""
+  ){
+
+    statusEl.textContent =
+      "Choose a category first.";
+
+    return;
+
+  }
+
+
+  if(!media){
+
+    const worked =
+      await enableCamera();
+
+    if(!worked){
+      return;
+    }
+
+  }
+
+
+  liveStreams =
+    liveStreams.filter(
+      stream =>
+      stream.creator !== "You"
+    );
+
+
+  liveStreams.unshift({
+
+    title:
+      titleEl.value.trim(),
+
+    category:
+      catEl.value,
+
+    creator:
+      "You",
+
+    stream:
+      media
+
+  });
+
+
+  statusEl.innerHTML = `
+
+    <b style="color:#ff6877">
+      ● LIVE
+    </b>
+
+    Your camera is now live
+    on this device.
+
+  `;
+
+
+  buildStreams();
+
+
+  setTimeout(() => {
+
+    closeModal("liveModal");
+
+  },500);
+
+
+});
+
+
+function watchStream(stream){
+
+  ptitle.textContent =
+    stream.title;
+
+
+  pcreator.textContent =
+
+    stream.creator +
+    " • " +
+    stream.category +
+    " • Live now";
+
+
+  watchVideo.srcObject =
+    stream.stream;
+
+
+  openModal("player");
+
+
+  watchVideo
+  .play()
+  .catch(() => {});
+
+}
+
+
+searchEl.addEventListener(
+"input",
+event => {
+
+  const query =
+    event.target.value
+    .toLowerCase();
+
+
+  document
+  .querySelectorAll(".card")
+  .forEach(card => {
+
+    card.style.display =
+      !query ||
+      card.dataset.search.includes(query)
+      ? ""
+      : "none";
+
+  });
+
+});
+
+
+buildStreams();
+
+</script>
+
+</body>
+</html>
